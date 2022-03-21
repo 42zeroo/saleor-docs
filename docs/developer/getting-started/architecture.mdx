@@ -15,7 +15,23 @@ All three components communicate using GraphQL over HTTPS.
 ```mermaid
 graph LR
   S[Storefront] ---|JavaScript| SDK[Saleor SDK]
-  SDK ---|GraphQL| C((Saleor Core))
-  D[Dashboard] ---|GraphQL| C
-  C --- P[(Database)]
+  SDK ---|GraphQL| CORE((Saleor Core))
+  D[Dashboard] ---|GraphQL| CORE
+  CORE ---|PostgreSQL| P[(Database)]
+  CORE ---|Redis| CACHE[(Cache)]
 ```
+
+## Extending Saleor
+
+While you could modify Saleor directly, we advise against this as once your deployment diverges from the upstream Saleor, it becomes hard to keep it updated.
+
+Extending Saleor is best done using external applications that rely on webhooks and GraphQL to communicate with Saleor.
+
+```mermaid
+graph LR
+  C -->|Webhooks| A[App]
+  A -->|GraphQL| C
+  C((Saleor Core))
+```
+
+To learn more, see [Extending Saleor](developer/extending.mdx).
